@@ -15,6 +15,7 @@
         "symfony/yaml": "6.2.*"
     },
     "require-dev": {
+        "fakerphp/faker": "^1.21",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "6.2.*",
         "symfony/css-selector": "6.2.*",
@@ -50,9 +51,10 @@
     "scripts": {
         "build": "docker build . -t cesc:ranking -f docker/Dockerfile",
         "start": [
-            "docker run  -p 127.0.0.1:8001:8001 cesc:ranking",
+            "docker run  -p 127.0.0.1:8001:8001 cesc:ranking --name cesc_ranking",
             "--name cesc-ranking"
-        ]
+        ],
+        "test": "docker exec -ti"
     },
     "conflict": {
         "symfony/symfony": "*"
