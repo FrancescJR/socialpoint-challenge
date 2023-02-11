@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Cesc\Ranking\Application;
 
-use Cesc\Ranking\Domain\CalculateNewAbsoluteScore;
-use Cesc\Ranking\Domain\CalculateNewRelativeScore;
-use Cesc\Ranking\Domain\CalculateNewScoreStrategyInterface;
 use Cesc\Ranking\Domain\Gamer;
 use Cesc\Ranking\Domain\GamerNotFoundException;
 use Cesc\Ranking\Domain\GamerRepositoryInterface;
@@ -20,26 +17,16 @@ final class SubmitScoreCommandHandler
     /**
      * @param SubmitScoreCommand $command
      * @return void
-     * @throws GamerNotFoundException
+//     * @throws GamerNotFoundException
      */
     public function __invoke(SubmitScoreCommand $command): void
     {
         if (!$gamer = $this->repository->findById($command->userId)) {
-            throw new GamerNotFoundException("Gamer with Id" . $command->userId . " not found");
+//            throw new GamerNotFoundException("Gamer with Id" . $command->userId . " not found");
+            $gamer = Gamer::generateGamer($command->userId);
         }
-        $strategy = $this->chooseStrategy($command, $gamer);
-        $gamer->submitScore($strategy);
-        $this->repository->add($gamer);
-    }
 
-    private function chooseStrategy(SubmitScoreCommand $command, Gamer $gamer): CalculateNewScoreStrategyInterface
-    {
-        if (!is_numeric($command->newScore)) {
-            return new CalculateNewRelativeScore(
-                $gamer->score(),
-                $command->newScore
-            );
-        }
-        return new CalculateNewAbsoluteScore($command->newScore);
+        $gamer->submitScore($command->newScore);
+        $this->repository->add($gamer);
     }
 }

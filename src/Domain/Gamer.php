@@ -13,6 +13,11 @@ final class Gamer
     ) {
     }
 
+    public static function generateGamer(string $id): self
+    {
+        return new self($id, 0, []);
+    }
+
     public function score():int
     {
         return $this->score;
@@ -23,13 +28,25 @@ final class Gamer
         return $this->domainEvents;
     }
 
-    public function submitScore(CalculateNewScoreStrategyInterface $submitScoreStrategy): void
+    public function submitScore(string $newScore): void
     {
-        $newScore = $submitScoreStrategy->newScore();
+        $strategy = $this->chooseStrategy($newScore);
+        $newScore = $strategy->newScore();
         $this->score = $newScore;
         $this->domainEvents[] = new GamerScoreChangedDomainEvent(
             $this->id,
             $this->score
         );
+    }
+
+    private function chooseStrategy(string $newScore):CalculateNewScoreStrategyInterface
+    {
+        if (!ctype_digit($newScore)) {
+            return new CalculateNewRelativeScore(
+                $this->score(),
+                $newScore
+            );
+        }
+        return new CalculateNewAbsoluteScore((int) $newScore);
     }
 }

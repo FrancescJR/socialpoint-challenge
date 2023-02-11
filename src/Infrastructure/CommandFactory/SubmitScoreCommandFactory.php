@@ -19,12 +19,12 @@ final class SubmitScoreCommandFactory
     public static function fromHttpRequest(Request $request, string $userId): SubmitScoreCommand
     {
         $content = json_decode($request->getContent(), true);
-        if (!array_key_exists("score", $content)) {
+        if (!$content || !array_key_exists("score", $content)) {
             throw new Exception("This endpoint requires a score in the json body of the request");
         }
         return new SubmitScoreCommand(
             $userId,
-            $content['score']
+            (string) $content['score']
         );
     }
 }
