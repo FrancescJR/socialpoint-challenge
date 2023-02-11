@@ -41,4 +41,15 @@ final class PartialScoreTest extends TestCase
         PartialScore::fromString("+300+");
     }
 
+    public function testModifyScore(): void
+    {
+
+        $partialScore = PartialScore::fromString("+60");
+        self::assertEquals(80, $partialScore->applyTo(20));
+        self::assertEquals(90, $partialScore->applyTo(30));
+
+        $partialScore = PartialScore::fromString("-60");
+        self::assertEquals(-20, $partialScore->applyTo(40));
+    }
+
 }

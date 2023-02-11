@@ -32,8 +32,8 @@ final class PartialScore
         return new self($operand, $value);
     }
 
-    public function modifyScore(int $initialScore): int
+    public function applyTo(int $initialScore): int
     {
-        return $initialScore;
+        return  $this->operand->operate($initialScore, $this->value);
     }
 }

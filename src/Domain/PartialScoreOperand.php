@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Cesc\Ranking\Domain;
 
+use Exception;
+
 final class PartialScoreOperand
 {
     public const INCREMENT = "+";
@@ -23,5 +25,24 @@ final class PartialScoreOperand
             throw new InvalidPartialScoreOperandException("Operand must be either + or -");
         }
         return new self($value);
+    }
+
+    public static function incrementOperand(): self
+    {
+        return new self(self::INCREMENT);
+    }
+
+    public static function decrementOperand (): self
+    {
+        return new self(self::DECREMENT);
+    }
+
+    public function operate(int $initial, int $modification): int
+    {
+        return match ($this->value) {
+            self::INCREMENT => $initial + $modification,
+            self::DECREMENT => $initial - $modification,
+            default => throw new Exception("Operation not implemented."),
+        };
     }
 }

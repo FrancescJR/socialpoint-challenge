@@ -14,6 +14,10 @@ final class PartialScoreOperandTest extends TestCase
     {
         $operand = PartialScoreOperand::fromString(PartialScoreOperand::INCREMENT);
         self::assertEquals(PartialScoreOperand::INCREMENT, $operand->value);
+        $operand = PartialScoreOperand::incrementOperand();
+        self::assertEquals(PartialScoreOperand::INCREMENT, $operand->value);
+        $operand = PartialScoreOperand::decrementOperand();
+        self::assertEquals(PartialScoreOperand::DECREMENT, $operand->value);
     }
 
     public function testInvalid(): void
@@ -22,4 +26,9 @@ final class PartialScoreOperandTest extends TestCase
         PartialScoreOperand::fromString("*");
     }
 
+    public function testOperate(): void
+    {
+        self::assertEquals(30, (PartialScoreOperand::decrementOperand())->operate(100, 70));
+        self::assertEquals(170, (PartialScoreOperand::incrementOperand())->operate(100, 70));
+    }
 }

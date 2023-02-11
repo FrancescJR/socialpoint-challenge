@@ -8,7 +8,8 @@ final class Gamer
 {
     public function __construct(
         public readonly string $id,
-        private int $score
+        private int $score,
+        private array $domainEvents
     ) {
     }
 
@@ -17,13 +18,28 @@ final class Gamer
         return $this->score;
     }
 
-    public function submitScore(int $newScore): void
+    public function domainEvents(): array
+    {
+        return $this->domainEvents;
+    }
+
+    private function setScore(int $newScore): void
     {
         $this->score = $newScore;
+        $this->domainEvents[] = new GamerScoreChangedDomainEvent(
+            $this->id,
+            $this->score
+        );
+    }
+
+    public function submitScore(int $newScore): void
+    {
+       $this->setScore($newScore);
     }
 
     public function submitPartialScore(PartialScore $partialScore): void
     {
-        $this->score = $partialScore->modifyScore($this->score);
+        $newScore =  $partialScore->applyTo($this->score);
+        $this->setScore($newScore);
     }
 }
