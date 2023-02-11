@@ -8,7 +8,7 @@ final class SubmitScoreCommand
 {
     public function __construct(
         public readonly string $userId,
-        public readonly int $newScore
+        public readonly string $newScore
     ) {
     }
 }

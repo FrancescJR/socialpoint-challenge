@@ -23,23 +23,13 @@ final class Gamer
         return $this->domainEvents;
     }
 
-    private function setScore(int $newScore): void
+    public function submitScore(CalculateNewScoreStrategyInterface $submitScoreStrategy): void
     {
+        $newScore = $submitScoreStrategy->newScore();
         $this->score = $newScore;
         $this->domainEvents[] = new GamerScoreChangedDomainEvent(
             $this->id,
             $this->score
         );
-    }
-
-    public function submitScore(int $newScore): void
-    {
-       $this->setScore($newScore);
-    }
-
-    public function submitPartialScore(PartialScore $partialScore): void
-    {
-        $newScore =  $partialScore->applyTo($this->score);
-        $this->setScore($newScore);
     }
 }
