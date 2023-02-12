@@ -15,7 +15,12 @@ final class InMemoryRankingProjection implements RankingProjectionInterface
 
     public function project(GamerScoreChangedDomainEvent $domainEvent)
     {
-        $this->ranking[] = ["userId" => $domainEvent->userId, "score" => $domainEvent->userNewScore];
+        $key = array_search($domainEvent->userId, array_column(json_decode(json_encode($this->ranking),TRUE), 'userId'));
+        if ($key) {
+            $this->ranking[$key]['score'] = $domainEvent->userNewScore;
+        } else {
+            $this->ranking[] = ["userId" => $domainEvent->userId, "score" => $domainEvent->userNewScore];
+        }
 
         usort($this->ranking, function($userA, $userB) {
             if($userA['score'] === $userB ['score']) return 0;

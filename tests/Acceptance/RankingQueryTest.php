@@ -30,18 +30,24 @@ final class RankingQueryTest extends KernelTestCase
         $numGamers = 10;
         $this->generateRandomRankingBoard($numGamers);
         $queryResponse = $this->queryRanking("top30");
-        self::assertCount($numGamers, $queryResponse);
+
         ConsolePrinting::printConsoleRankingTableFromArray($queryResponse, "top30");
+        self::assertCount($numGamers, $queryResponse);
 
         $queryResponse = $this->queryRanking("at5/2");
         ConsolePrinting::printConsoleRankingTableFromArray($queryResponse, "at5/2");
 
-
-
         $gamer = GamerStub::withScore(500);
 
-        echo "\n Adding ".$gamer->id." with 500 score";
+        echo "\n Adding ".$gamer->id." with 500 score.\n";
         $request = $this->generateSubmitScoreRequestFromGamer($gamer);
+        ($this->submitScoreController)($request, $gamer->id);
+
+        $queryResponse = $this->queryRanking("top20");
+        ConsolePrinting::printConsoleRankingTableFromArray($queryResponse, "top20");
+
+        echo "\n Modifying ".$gamer->id." with +500.\n";
+        $request = $this->generateSubmitScoreRequestFromGamer($gamer, "+500");
         ($this->submitScoreController)($request, $gamer->id);
 
         $queryResponse = $this->queryRanking("top20");
@@ -57,7 +63,7 @@ final class RankingQueryTest extends KernelTestCase
         }
     }
 
-    private function generateSubmitScoreRequestFromGamer(Gamer $gamer): Request
+    private function generateSubmitScoreRequestFromGamer(Gamer $gamer, string $relativeScore = null): Request
     {
         return Request::create(
             "/user/{$gamer->id}/score",
@@ -67,7 +73,7 @@ final class RankingQueryTest extends KernelTestCase
             [],
             [],
             json_encode([
-                'score' => $gamer->score()
+                'score' => $relativeScore ?? $gamer->score()
             ])
         );
     }
