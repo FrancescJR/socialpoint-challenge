@@ -11,10 +11,11 @@ use Cesc\Ranking\Domain\RankingProjectionInterface;
 
 final class GamerScoreChangedEventHandler implements DomainEventSubscriberInterface
 {
-    public function __construct(private RankingProjectionInterface $projection)
-    {
-        SimpleSyncEventBus::instance()->subscribe($this);
+    public function __construct(
+        private RankingProjectionInterface $projection,
+    ) {
     }
+
 
     public function handle(DomainEvent $domainEvent): void
     {
