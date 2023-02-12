@@ -172,7 +172,7 @@ composer test.acceptance #just  a shortcut to avoid writing the above
 docker exec -ti cesc_ranking bin/phpunit --testsuite=acceptance
 ```
 *Remember that if you edit, you need to build the image again, add a volume, 
-or just execute the bin/phpunit from your machine.*
+or just execute the bin/phpunit from your machine. Make sure you have PHP version >= 8.1.10*
 
 
 All right that is all.
