@@ -10,5 +10,4 @@ final class TopRankingViewQuery implements RankingViewQuery
         public readonly int $top
     ) {
     }
-
 }

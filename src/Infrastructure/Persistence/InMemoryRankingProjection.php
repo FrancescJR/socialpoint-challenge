@@ -15,25 +15,21 @@ final class InMemoryRankingProjection implements RankingProjectionInterface
 
     public function project(GamerScoreChangedDomainEvent $domainEvent)
     {
-        $this->ranking[$domainEvent->userId] = ["userId" => $domainEvent->userId, "score" => $domainEvent->userNewScore];
+        $this->ranking[] = ["userId" => $domainEvent->userId, "score" => $domainEvent->userNewScore];
 
         usort($this->ranking, function($userA, $userB) {
-           if ($userA['score'] >= $userB ['score']) {
-               return $userA;
-           }
-           return $userB;
+            if($userA['score'] === $userB ['score']) return 0;
+            return $userA['score'] >= $userB ['score']? -1:1;
         });
-
-        $this->updatePositions();
-
+        $this->updateRanking();
         $this->lastUpdatedAt = $domainEvent->occurredAt;
     }
 
-    private function updatePositions() {
-        $position = 1;
-        foreach($this->ranking as $gameRankingView) {
-            $gameRankingView['ranking'] = $position;
-            $position++;
+    private function updateRanking() {
+        $ranking = 1;
+        foreach($this->ranking as $position => $gameRankingView) {
+            $this->ranking[$position]['ranking'] = $ranking;
+            $ranking++;
         }
     }
 
@@ -44,6 +40,6 @@ final class InMemoryRankingProjection implements RankingProjectionInterface
 
     public function queryRelative(int $position, int $around): array
     {
-        // TODO: Implement queryRelative() method.
+        return array_slice($this->ranking, $position - ($around +1), $around * 2 + 1, true);
     }
 }

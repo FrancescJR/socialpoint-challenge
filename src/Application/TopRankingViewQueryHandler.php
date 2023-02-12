@@ -10,9 +10,7 @@ final class TopRankingViewQueryHandler
 {
     public function __construct(
         private RankingProjectionInterface $projection
-    )
-    {
-
+    ) {
     }
 
     public function __invoke(TopRankingViewQuery $query): array

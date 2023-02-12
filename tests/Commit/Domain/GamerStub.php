@@ -13,7 +13,7 @@ final class GamerStub
     {
         return new Gamer(
             (Factory::create())->name(),
-            (Factory::create())->randomNumber(),
+            (Factory::create())->randomNumber(3),
             []
         );
     }

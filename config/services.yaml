@@ -13,6 +13,7 @@ services:
         bind:
             Cesc\Ranking\Domain\GamerRepositoryInterface: '@Cesc\Ranking\Infrastructure\Persistence\InMemoryGamerRepository'
             Cesc\Ranking\Domain\RankingProjectionInterface: '@Cesc\Ranking\Infrastructure\Persistence\InMemoryRankingProjection'
+            Cesc\Ranking\Domain\EventBusInterface: '@Cesc\Ranking\Application\SimpleSyncEventBus'
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     Cesc\Ranking\:
@@ -28,3 +29,7 @@ services:
     Cesc\Ranking\Infrastructure\API\:
         resource: '../src/Infrastructure/API/'
         tags: ['controller.service_arguments']
+
+    Cesc\Ranking\Application\SimpleSyncEventBus:
+        calls:
+            - subscribe: ['@Cesc\Ranking\Application\GamerScoreChangedEventHandler']
