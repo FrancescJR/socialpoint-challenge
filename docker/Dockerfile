@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine
+FROM php:8.1.10-fpm-alpine
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin
 

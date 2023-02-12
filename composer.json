@@ -50,11 +50,10 @@
     },
     "scripts": {
         "build": "docker build . -t cesc:ranking -f docker/Dockerfile",
-        "start": [
-            "docker run  -p 127.0.0.1:8001:8001 cesc:ranking --name cesc_ranking",
-            "--name cesc-ranking"
-        ],
-        "test": "docker exec -ti"
+        "start": "docker run  --name cesc_ranking -d -p 127.0.0.1:8001:8001 cesc:ranking",
+        "stop": "docker stop cesc_ranking && docker rm cesc_ranking",
+        "test.commit": "docker exec -ti cesc_ranking bin/phpunit --testsuite=unit",
+        "test.acceptance": "docker exec -ti cesc_ranking bin/phpunit --testsuite=acceptance"
     },
     "conflict": {
         "symfony/symfony": "*"

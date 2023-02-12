@@ -108,43 +108,42 @@ much as possible -inside the sanity- and using higher order arguments).
 Since I haven't spent much time adding integration or acceptance tests, you can 
 as well follow the instruction to start the application below.
 
-
-
 ## Installation
 
 You need docker installed in your machine. Composer PHP is a nice to have but not mandatory.
 
-
 ### With Composer PHP
 If you have composer (PHP) installed in your machine do the following.
-
+```shell
+composer build
+composer start
+```
+to stop and kill the application execute
+```shell
+composer stop
+```
 ### Without Composer PHP
-Execute this commands at the root of this project:
+Just the execute the scripts that composer would have executed:
 
-xx
-xx
+```shell
+docker build . -t cesc:ranking -f docker/Dockerfile
+docker run  --name cesc_ranking -d -p 127.0.0.1:8001:8001 cesc:ranking
+```
+to stop and kill the application execute
+```shell
+docker stop cesc_ranking && docker rm cesc_ranking
+```
+## Usage
 
-## Testing
+You can test once the application is running:
 
-### With PHP installed
+```shell
+bin/phpunit --testsuite=unit  # if you have PHP installed, probably, if you have composer
+composer test.unnit #just  a shortcut to avoid writing the above
+docker exec -ti cesc_ranking bin/phpunit --testsuite=unit #if you dont have composer
+```
 
-(if you have composer installed chances are that you have also php installed)
-
-execute:
-`bin/phpunit --testsuite=unit`
-
-### With Composer PHP
-
-
-execute:
-`bin/phpunit --testsuite=unit`
-
-### With Docker
-
-
-execute:
-`bin/phpunit --testsuite=unit`
-
+There;s also a postman collection that you can import and test the endpoints.
 
 > Why when using Postman always returns an empty rank board?
  
@@ -165,5 +164,16 @@ There are some helper functions, so you might want to modify them and try other 
 You might be able to break the application, since I haven't tested all the edge
 cases.
 
+This is to see it:
+
+```shell
+bin/phpunit --testsuite=acceptance  # if you have PHP installed, probably, if you have composer
+composer test.acceptance #just  a shortcut to avoid writing the above
+docker exec -ti cesc_ranking bin/phpunit --testsuite=acceptance
+```
+*Remember that if you edit, you need to build the image again, add a volume, 
+or just execute the bin/phpunit from your machine.*
 
 
+All right that is all.
+Cheers!
