@@ -166,12 +166,12 @@ important. I don't think you got your priorities right here.
 > The handler is writing both in the repository and publishing an event 
 > which is in fact the most important part of the test who is delegated.
  
-I think I already explain why. That the handler writes to the repository and publishes
+I think I already explain why. And that the handler writes to the repository and publishes
 is inevitable. I repeat, inevitable. How to avoid it? With Event Sourcing.
 
 Which is a whole new level. I can go there too, but I am sure I will be received with 
 the same contempt I have been received with this **simple version of CQRS** attempt. 
-The points here are basically pointing to the paces that matters the least,
+The points here are basically pointing to the places that matters the least,
 proving that they don't really have the knowledge. (It's available in many books).
 It's interesting that you've been confused by those insignificant parts, like
 not having a command bus or testing the controller, but not interested
