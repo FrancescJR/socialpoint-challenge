@@ -1,17 +1,31 @@
-# SocialPoint technical test
+# Review Result
 
-## The challenge
+```
+Dear Francesc,
 
-I prioritized development speed in most of my decision.
+We have reviewed your test and, unfortunately, we have decided not to move forward with 
+your candidacy for the current opening at Social Point, because the results did not match 
+the requirements for this position.
 
-The test is done in PHP (I wanted Rust, but since you specified you preferred PHP or Go I went for PHP, 
-I have no idea of GO, but with PHP I feel quite comfortable).
+The test has been rejected mostly because of not complying with the technical requirements,
+but we're attaching other feedback points that we hope you find useful and that help you 
+grow:
+```
 
-The test is done using CQRS architecture (which is based in hexagonal architecture).
-Supported by the Symfony framework.
+Oh so the solution here is not good for Social Point, let's review the feedback.
 
-> Wait! Are you coupling yourself to Symfony Framework?
+## Feedback
 
+> Do not couple yourself to a specific framework: 
+
+Especifically:
+
+> The team hasn't found the justifications to be enough for coupling to Symfony
+
+Let's review my justifiction here:
+
+```shell
+>> Wait! Are you coupling yourself to Symfony Framework?
 Well, I am, in two key points:
 * I am using Symofony Dependency Injection system
 
@@ -30,150 +44,154 @@ If the access point had been through terminal, I would have avoided Symfony all 
 
 In any case you will see is quite framework agnostic, apart from the points above
 everything related to symfony is relegated to teh infrastructure layer.
+```
 
-> What are you using for the web server?
+As said above I could have made all the instances of the classes by hand,
+that wouldn't have been a problem, it's just instantiating the classes through
+some "news xxxx()".
 
-For the main reason to go fast, I am using the main Symfony Server as web server,
-so no need to have two dockers with nginx and php-fpm.
+Now for the controller, do they really want to write my own http controllers?
+Well, that's as equally stupid as dellusional.  
 
-yes, it's not for production, but this is a test, it's not going to go to production.
+Then: 
+> There's a lot of unneeded boilerplate due to the coupling to SF fwk that
 
-> Why there's no docker compose?
+I grant this point, I normally only install the Http Foundation. I give you this point.
+(and now that I think about it, I was thinking on using symfony messenger for
+the buses, but since I didn't put any infra, yes... too much packages here).
 
-Since I am using a single docker, there is no need for a docker compose (even though
-it simplifies the commands... sorry you have to write all the long docker run xxx
-commands)
+I do agree on this one.
 
-> Directory Structure?
+> How you test and ensure the overall quality of the solution:
 
-Since I am using Symfony's Dependency Injection System (it's container) and
-as the web server, I didn't
-want to start customizing too many things, so I kept a typical Symfony 
-framework directory structure modifying mainly the /src directory to
-have a proper hexagonal architecture, but still
-the config/ directory where I specify all the services and it's dependencies it's very
-well much needed.
-
-> Is it really CQRS?
-
-Yes it is. But everything is synchronous, and I am almost not using any bus.
-it's like the minimal expression of CQRS. CQRS Lite you can call it.
-
-If we should use in memory persistence to avoid using external persistence mechanisms,
-it makes even less sense to rely on the need of infrastructure to mount a real
-asynchronous system, so there's no queues everywhere and everything is being
-called directly.
-
-The only bus I explicitly added is the event bus. It also happens synchronously
-but that one is important to add to show the distinction between commands and queries
-and how are they glued together. That would be the very first piece to make
-async if we were to continue with this project.
-
-> Your testing directories are weird
-
-Yes, my way to see testing is all together with a pipeline when deploying to 
-production (it all comes from the Continuous Integration Book).
-
-So I divide the tests into unit testing, but I call them "commit", since they
-should be executed at every commit.
-
-Then I would have integration tests (mainly to check env variables) and acceptance
-tests (I still haven't found an appropriate name for them, because a unit
-test can almost become acceptance test if most of the logic is in the domain
-which is quite often). The acceptance test are supposed to test the whole system.
-
-Inside each type then it's a typical testing directory.
-
-The acceptance test here is mainly to have a kernel symfony alive for more than
-one request, so 
-
-> So testing code coverage
-
-Well, to go fast, I've mainly only tested the Domain, I made sure that the
-task would work by using the acceptance test pretending to be a client.
-
-So it's not as desirable as it should be. I normally strive for 100%, but I took
-maybe other worse decisions for the sake of fast development (using
-symfony, avoiding some pattern or checking some user input) , so not having
-100% coverage is not the worst here.
-
-> How should I check the code?
+> Tests are not covering the key parts and they go mostly through the happy path.
  
-You should start with the domain tests and see how the domain is supposed to work.
+That's very interesting. Because I only covered the Domain, therefore they consider
+the domain to NOT be a key part. Meaning: **there's probably no real Domain Driven Development
+in this company, or it's greatly missunderstood**.
 
-There are a couple of places in the domain that I approached the problems with a functional programming
-mindset (not all the way to use higher order functions, but keeping immutability as
-much as possible -inside the sanity- and using higher order arguments).
+> The balance in between time invested in code structure and tests is not good. This taking also into account that we've found commented lines along the code
 
-Since I haven't spent much time adding integration or acceptance tests, you can 
-as well follow the instruction to start the application below.
+I really put extra careful effort on testing the domain, checking the domain tests you
+see how you expect the domain to function. That's the philosophy. You could have seen
+this was done via TDD.
 
-## Installation
+The infrastructure and acceptance tests are secondary in nature. Especially with a
+time constraint for the challenge, to prioritize the most important things.
 
-You need docker installed in your machine. Composer PHP is a nice to have but not mandatory.
+And yes you can check here there's a commented line of code. Which I forgot to explain
+on the README, but since maybe was already too long, I don't think it would have helped
+understand.
 
-### With Composer PHP
-If you have composer (PHP) installed in your machine do the following.
-```shell
-composer build
-composer start
-```
-to stop and kill the application execute
-```shell
-composer stop
-```
-### Without Composer PHP
-Just the execute the scripts that composer would have executed:
+> Most of the test depends on the model built for CQRS but this part is not tested as well as the controllers which are not properly covered
 
-```shell
-docker build . -t cesc:ranking -f docker/Dockerfile
-docker run  --name cesc_ranking -d -p 127.0.0.1:8001:8001 cesc:ranking
-```
-to stop and kill the application execute
-```shell
-docker stop cesc_ranking && docker rm cesc_ranking
-```
-## Usage
+That's a weird affirmation. The test are only on the domain. Not on the model 
+build on CQRS. That the whole CQRS is not tested that is, well, true, as well 
+as controllers are not completely being tested.
 
-You can test once the application is running:
+Why not? It's all infrastructure tests. They would just amplify the domain error
+which is tested at 100% I believe. So I only put one test, just to show that it
+actually works.
 
-```shell
-bin/phpunit --testsuite=unit  # if you have PHP installed, probably, if you have composer
-composer test.unnit #just  a shortcut to avoid writing the above
-docker exec -ti cesc_ranking bin/phpunit --testsuite=unit #if you dont have composer
-```
+If you want to test all the controllers, you can do it by "unit testing", which
+is kind of useless, since it's basically written by symfony not me (a reason to use
+symfony). Or you can acceptance test.  Those tests should be way less than the others.
+but somehow **it was expected that I tested way more the infrastructure than the domain,
+giving more importance to the infrastructure concerns.**
 
-There;s also a postman collection that you can import and test the endpoints.
+Infrastructure concerns are valid, but are easily solvable by vendors and using
+third party libraries, not the core business.
 
-> Why when using Postman always returns an empty rank board?
+> Readme is not explaining how can we check the code 'til the line 100. TBH it's been tedious to go through so many justifications such as testing directories, testing coverage, usage of framework, ... They've made the review team to take those points even more into account that they would have initially
+
+Aha aha aha!!! That's the real reason they didn't like this test: **EGO**. They didn't expect
+a candidate to explain things as I do in my blog. They didn't like that a candidate was 
+treating oh the great correctors at SocialPoint as equal. So let's focus on, oh you coupled
+yourself! Well, as a matter of fact, I did not, my domain is free of interferences
+it could be even ported to another lanuage without much work. Oh you didn't do
+enough feature/integration tests! Well, of course not, I would be an idiot if I did!
+
+I appreciate the sincerity, though.
+
+And finally.
+
+> We have found difficulties justifying your use of CQRS in the way you used it: 
+
+Yes, you are right, but, why not? I could do it in less than 8 hours, so while is not
+the best choice, who cares, it's done properly. -- Reading the rest, it looks
+like you don't understand the use of CQRS because I didn't use a command bus.
+I hope you know CQRS is not about the busses, right?
+
+> Commands and Queries end being DTOs which are handled by "services/handlers"
+
+That's precisely what they are! This is my quoting the "CQRS By Example"
+
+> CQRS By Example -> In essence, we can state that Command are DTOs
+
+I guess you seem more troubled that there is no Command Bus:
+
+> Readme states that you're using CQRS without command or query bus... why having an event bus for the most important of the solution but not for commands and queries, this looks pretty inconsistent from our PoV
+
+I guess you needed an even longer README explaining why I didn't think the 
+command bus or query bus are not as important. I think it's quite simple.
+
+The need for "asyncronuosity" in the command is not as important as for the handling
+for events. And the need for asnyc queries is even less.
+
+I am not sure if I should try to explain why asynchonous queries are in general not needed.
+So I will focus on the commands.
+
+Commands would make for a nice async thing, that's right, instantly return the 200 or
+204 accepted and exec the command later. But it's also nice to get the result whether
+handling the command was OK or not. And I would say most of the cases you would like that.
+
+And once I am not going to add a lot of infrastructure concerns on the managing
+commands that normally fall to the command bus responsibility such as checking
+the validity, logging, or ensuring a single transaction, I might as well pass
+the command directly. For simplicity. It's a simple version... I said that.
+
+Why I didn't do the same with the events? Because those are important to make them
+async. That the whole point CQRS, not command buses or query buses, but actually
+joining the two models together.
+
+I didn't make it async because... why? yes! Because I need infra!
+
+I think it's quite simple to understand why queries and commands just go directly
+to the specified place and events are pretending to be async.
+
+But apparently the use of the command bus or the even more useless query bus was more
+important. I don't think you got your priorities right here.
+
+> You can see an example that could generate an interesting discussion in SubmitScoreCommandHandler. 
+> The handler is writing both in the repository and publishing an event 
+> which is in fact the most important part of the test who is delegated.
  
-Because Symfony Kernel is booted for every request. Meaning, the
-process is alive until the request is done. Since I am using in memory
-persistence (basically a PHP array), this array gets removed at every request.
+I think I already explain why. That the handler writes to the repository and publishes
+is inevitable. I repeat, inevitable. How to avoid it? With Event Sourcing.
 
-> Then how can I check it actually works
+Which is a whole new level. I can go there too, but I am sure I will be received with 
+the same contempt I have been received with this **simple version of CQRS** attempt. 
+The points here are basically pointing to the paces that matters the least,
+proving that they don't really have the knowledge. (It's available in many books).
+It's interesting that you've been confused by those insignificant parts, like
+not having a command bus or testing the controller, but not interested
+on how cqrs pattern solved this problem by making the view instantly available.
+
+# End
+
+>  we hope you find useful and that help you grow
+
+I found them very useful at calibrating your company, but meaningless in knowledge. 
+Missing Integration tests? of course I would try to test it all, I am not goign to on
+a test... Totally meaningless, this feedback is either ignorant and arrogant,
+or probably both.
+
+I don't think it's me who needs to grow.
+
+
  
-I have added in the acceptance test a beautiful script that prints in the terminal
-the result of some random queries.
-
-It works because the kernel is booted at the beginning of the test and kept alive
-until the test finishes, so you can see how the ranking board is being modified.
-
-There are some helper functions, so you might want to modify them and try other things.
-
-You might be able to break the application, since I haven't tested all the edge
-cases.
-
-This is to see it:
-
-```shell
-bin/phpunit --testsuite=acceptance  # if you have PHP installed, probably, if you have composer
-composer test.acceptance #just  a shortcut to avoid writing the above
-docker exec -ti cesc_ranking bin/phpunit --testsuite=acceptance
-```
-*Remember that if you edit, you need to build the image again, add a volume, 
-or just execute the bin/phpunit from your machine. Make sure you have PHP version >= 8.1.10*
 
 
-All right that is all.
-Cheers!
+
+
+
