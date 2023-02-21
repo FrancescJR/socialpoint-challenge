@@ -11,18 +11,35 @@ The test has been rejected mostly because of not complying with the technical re
 but we're attaching other feedback points that we hope you find useful and that help you 
 grow:
 ```
+---
+The specific feedback:
 
-Oh so the solution here is not good for Social Point, let's review the feedback.
+* Do not couple yourself to a specific framework: 
+  * The team hasn't found the justifications to be enough for coupling to Symfony
+  * There's a lot of unneeded boilerplate due to the coupling to SF fwk that
+* How you test and ensure the overall quality of the solution:
+  * Tests are not covering the key parts and they go mostly through the happy path.
+  * The balance in between time invested in code structure and tests is not good. This taking also into account that we've found commented lines along the code
+  * Most of the test depends on the model built for CQRS but this part is not tested as well as the controllers which are not properly covered
+* Readme is not explaining how can we check the code 'til the line 100. TBH it's been tedious to go through so many justifications such as testing directories, testing coverage, usage of framework, ... They've made the review team to take those points even more into account that they would have initially
+* We have found difficulties justifying your use of CQRS in the way you used it:
+  * Commands and Queries end being DTOs which are handled by "services/handlers"
+  * Readme states that you're using CQRS without command or query bus... why having an event bus for the most important of the solution but not for commands and queries, this looks pretty inconsistent from our PoV
+  * You can see an example that could generate an interesting discussion in SubmitScoreCommandHandler. The handler is writing both in the repository and publishing an event which is in fact the most important part of the test who is delegated.
 
-## Feedback
+---
+
+Oh, so the solution here is not good for Social Point, let's review the feedback point by point
+
+## "Coupling to the framework"
 
 > Do not couple yourself to a specific framework: 
 
-Especifically:
+Specifically:
 
 > The team hasn't found the justifications to be enough for coupling to Symfony
 
-Let's review my justifiction here:
+Let's review my justification here:
 
 ```shell
 >> Wait! Are you coupling yourself to Symfony Framework?
@@ -56,11 +73,32 @@ Well, that's as equally stupid as dellusional.
 Then: 
 > There's a lot of unneeded boilerplate due to the coupling to SF fwk that
 
-I grant this point, I normally only install the Http Foundation. I give you this point.
-(and now that I think about it, I was thinking on using symfony messenger for
-the buses, but since I didn't put any infra, yes... too much packages here).
+I normally only install the Http Foundation and the dependency Injection, I did that
+in other challenges. I could have tried that, even though
+it would have taken more time to fine grain the packages. I agree with that, but keep in mind
+that this is a context of a tech challenge with a time constraint, 
 
-I do agree on this one.
+## Am I really coupling to the framework ?
+
+Well, the question is that NO, I am not. It has been an unfortunate use of my words
+assuming that whoever corrected the test would see it in the code.
+
+Obviously that person, nor anybody in the chain going to the very top of SocialPoint
+didn't actually see that I am not coupling to the framework.
+
+I am using Hexagonal Architecture totally clean, there's no leakage of infrastructure
+on the other layers. That's how I keep myself uncoupled to the framework.
+
+What I should have said instead is that **I used Symfony framework**. But my assuming
+that other people would know about hexagonal architecture, I described it in a demeaning
+way to my interests.
+
+The conclusion that one can get here is that **the corrector didn't realize that this was
+done in hexagonal architecture**. That's very telling. **If you check the code is plain
+obvious.**
+
+
+# Missing Tests
 
 > How you test and ensure the overall quality of the solution:
 
@@ -102,18 +140,58 @@ giving more importance to the infrastructure concerns.**
 Infrastructure concerns are valid, but are easily solvable by vendors and using
 third party libraries, not the core business.
 
+And about that: `test depends on the model built for CQRS` again they seem to be totally
+clueless to the fact that CQRS is based on hexagonal architecture. That's the actual model
+in the code. **The corrector not only doesn't know about hexagonal architecture but
+is totally clueless to CQRS too.**
+
+## Are tests really missing ?
+
+If you consider infrastructure tests to be crucial, yes they are missing. But
+**considering infrastructure tests to be crucial is a wrong approach** which undermines
+the philosophy of DDD.
+
+I did write an infrastructure test, whole acceptance tests that proves the correctness
+of the whole system. It didn't seem they actually found that. But since they don't know
+about hexagonal architecture, is expected that they don't know either about DDD, nor
+testing conventions. Or deploying pipelines, the ONLY place where tests actually matter!
+
+The conclusion that I could get here is that the corrector misses the point of both DDD
+and hexagonal architecture by asking infrastructure tests.
+
+# README too long
+
 > Readme is not explaining how can we check the code 'til the line 100. TBH it's been tedious to go through so many justifications such as testing directories, testing coverage, usage of framework, ... They've made the review team to take those points even more into account that they would have initially
 
-Aha aha aha!!! That's the real reason they didn't like this test: **EGO**. They didn't expect
-a candidate to explain things as I do in my blog. They didn't like that a candidate was 
-treating oh the great correctors at SocialPoint as equal. So let's focus on, oh you coupled
-yourself! Well, as a matter of fact, I did not, my domain is free of interferences
-it could be even ported to another lanuage without much work. Oh you didn't do
-enough feature/integration tests! Well, of course not, I would be an idiot if I did!
+I am not sure whether to appreciate the honesty, taking into account the lack of knowledge
+oozed from this feedback. This sentence is a plain attack to me. It has nothing to do
+with the technical test and yet you have the courage to say that it made you to be stricter
+when correcting the test.
 
-I appreciate the sincerity, though.
+"That you correct a test" it's kind of an oxymoron since it's obvious that you've never read
+any book about coding, patterns or software architecture. The feedback so far has 
+been useless plus this lack of respect.
 
-And finally.
+You say reading about testing directories has been tedious? I thought we could have a 
+discussion as equals. Justifications about the directory structure? Well I think
+it's important, don't you? It gives intention and shows how the layers
+of hexagonal architecture properly. Did I write about testing coverage? I don't
+think I did.
+
+So reading about justifying decision has been tedious. That implies something. You were
+bored correcting it, and you don't think those justifications are important. You are 
+dismissing me saying it's not worth your time to understand my reasoning. 
+
+I am not worth your time.
+
+This is a clear lack of respect and honestly, now it's my honesty, that you decide it's OK
+to send back this feedback to me with a lack of respect tells a lot about your culture and
+about you as a person, not only the ones that "gave feedback", but the one who click the send
+button for that email. It makes me wonder heavily what are your values and your standards.
+
+Despite being treated disrespectfully, I will try to engage on the following discussions:
+
+# Use of CQRS
 
 > We have found difficulties justifying your use of CQRS in the way you used it: 
 
@@ -127,6 +205,9 @@ I hope you know CQRS is not about the busses, right?
 That's precisely what they are! This is my quoting the "CQRS By Example"
 
 > CQRS By Example -> In essence, we can state that Command are DTOs
+
+Are you sure you know about CQRS? It doesn't look like you know. The book above
+is a great way to start reading about it!
 
 I guess you seem more troubled that there is no Command Bus:
 
@@ -177,17 +258,10 @@ It's interesting that you've been confused by those insignificant parts, like
 not having a command bus or testing the controller, but not interested
 on how cqrs pattern solved this problem by making the view instantly available.
 
-# End
-
->  we hope you find useful and that help you grow
-
-I found them very useful at calibrating your company, but meaningless in knowledge. 
-Missing Integration tests? of course I would try to test it all, I am not goign to on
-a test... Totally meaningless, this feedback is either ignorant and arrogant,
-or probably both.
-
-I don't think it's me who needs to grow.
-
+And the interesting discussion is where? Above is my saying, where's yours? You don't
+write any discussion because you are afraid that you won't hold being correct? or
+of course since I am wasting your time, it's not worth your time to actually
+engage in it.
 
  
 
