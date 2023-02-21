@@ -43,7 +43,7 @@ bad culture too. The picture has been taken.
 And here's me growing: I wish you well, I hope you change and see where's the line of respect. Even if technically you
 were actually better, and I could learn anything from you, you should avoid this lack of respect. You want to get
 the best out of people, everybody has something to teach if you keep your mind open and humble. I am sure 
-I have some stuff to learn from you too, but after this feedback, you made it clear that if there was any
+I have some stuff to learn from you too, but after this feedback, you made it clear that if there was anything,
 you probably wouldn't spend the time, because you say I am not worth it. 
 
 So I will continue getting all my knowledge from books. I encourage you do the same, it helps keeping your mind open.
