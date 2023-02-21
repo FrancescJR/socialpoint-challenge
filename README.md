@@ -1,4 +1,4 @@
-I think it's important that I write the feedback received:
+the feedback
 
 
 ```
@@ -27,30 +27,7 @@ grow:
     * You can see an example that could generate an interesting discussion in SubmitScoreCommandHandler. The handler is writing both in the repository and publishing an event which is in fact the most important part of the test who is delegated.
 ```
 
-Let's repeat this:
+This feedback doesn't hold technically, and it comes with a lack of respect: "tbh it's
+been tedious" implying that I am not worth their time.
 
-```shell
-we hope you find useful and that help you grow
-```
-
-Well I could summarize it as a bunch of well, useless statements based not on actual
-knowledge of the concepts but on hearsay, served all together with a lack of respect. This feedback doesn't hold technically. 
-(see feedback_commented.md for more details). And then we have the lack of respect stating basically
-that I am not worth your time.
-
-But yes, I find the feedback useful: I know the coding level at your company is very low now, and probably there's a 
-bad culture too. The picture has been taken.
-
-And here's me growing: I wish you well, I hope you change and see where's the line of respect
-that you shouldn't cross. Even if technically you
-were actually better, you should avoid this lack of respect. You want to get
-the best out of people, everybody has something to teach if you keep your mind open and humble. I am sure 
-I have some stuff to learn from you too, but after this feedback, you made it clear that if there was anything,
-you probably wouldn't spend the time, because you say I am not worth it. 
-
-So I will continue getting all my knowledge from books. I encourage you do the same, 
-it helps keeping your mind open, it will help avoid judging on mere hearsay and
-will allow you to have real discussions on a valid frame.
-
-All the best
- 
+good job.
